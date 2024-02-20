@@ -1,4 +1,13 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
-export default defineNuxtConfig({
-  devtools: { enabled: true }
-})
+const defineNuxtConfig = async () => {
+  
+  return {
+    devtools: { enabled: true },
+    
+    runtimeConfig: {
+      
+    }
+  }
+}
+export default defineNuxtConfig
+
+
