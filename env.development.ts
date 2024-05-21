@@ -1,5 +1,5 @@
 export default {
     APP_ENV: {
-      DEV: 'http://local.modeBuy'
+      URL: 'http://local.modeBuy'
     }
 }
