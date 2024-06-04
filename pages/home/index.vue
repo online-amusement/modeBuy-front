@@ -9,7 +9,12 @@
     
     </div>
 </template>
-<script lang="ts">
+<script lang="ts" setup>
+import ResponseData from '~/models/apis/responseData';
+const { data } = useAuth();
+definePageMeta({ auth: false });
+
+
 
 </script>
 <style lang="scss" scoped>
