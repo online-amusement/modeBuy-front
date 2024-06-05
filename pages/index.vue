@@ -9,6 +9,10 @@
 <script setup lang="ts">
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+//definePageMeta({ auth: false });
+
+const { getSession } = useAuth()
+const dataValue = await getSession()
 //import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 const runtimeConfig = useRuntimeConfig()
 const loader = new GLTFLoader();
@@ -17,8 +21,8 @@ const model = 'http://localhost:3002/3d/AnimatedMorphSphere.glb';
 const scene = new THREE.Scene()
 const clock = new THREE.Clock();
 const canvas = ref()
-let width = 640;
-let height = 480;
+let width = 1200;
+let height = 800;
 
 //
 let renderer : THREE.WebGLRenderer | null = null
@@ -34,6 +38,9 @@ onMounted(() => {
     createLight()
     //createControl()
     load()
+
+    const headers = useRequestHeaders(['cookie'])
+    console.log("headers", headers);
 })
 
 /* events */
@@ -43,7 +50,7 @@ const initScene = () => {
     // width = window.innerWidth;
     // height = window.innerHeight;
 
-    scene.background = new THREE.Color("#000000")
+    //scene.background = new THREE.Color("#000000")
 
 }
 
@@ -114,24 +121,22 @@ const load = () => {
 };
 
 const tick = () => {
-
     const delta = clock.getDelta();
     
     if(targetObject){
         targetObject.rotation.x += 0.01;
         //targetObject.scale.x += 0.01
-        //targetObject.scale.y += 3.0 + Math.random() * 5.0
+        targetObject.scale.y += 10.0 + Math.random() * 5.0
     }
 
     //mixer.pla
-
     if(camera && renderer){
         renderer.render(scene, camera)
     }
     requestAnimationFrame(tick)
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .container {
     display: flex;
     justify-content: center;

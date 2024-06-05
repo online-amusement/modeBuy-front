@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
+    "@sidebase/nuxt-auth": "^0.7.2",
     "nuxt": "^3.9.3",
     "sass": "^1.74.1",
     "typescript": "^5.4.5",
@@ -18,8 +19,12 @@
   },
   "dependencies": {
     "@types/three": "^0.164.0",
+    "@vee-validate/i18n": "^4.12.8",
+    "@vee-validate/rules": "^4.12.8",
     "node-sass": "^9.0.0",
     "sass-loader": "^14.1.1",
-    "three": "^0.164.1"
+    "three": "^0.164.1",
+    "vee-validate": "^4.12.8",
+    "yup": "^1.4.0"
   }
 }

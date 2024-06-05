@@ -18,6 +18,35 @@ export default defineNuxtConfig({
       ],
     },
   },
+  modules: ['@sidebase/nuxt-auth'],
+  auth: {
+    globalAppMiddleware: true,
+    provider: {
+      type: 'local',
+      pages: {
+        login: '/login',
+      },
+      endpoints: {
+        signIn: { path: "/login", method: "post"},
+        getSession: { path: "/me", method: "post"},
+      },
+      token: {
+        // signInResponseTokenPointer: '/token', // レスポンスJSON内のtokenのキー
+        type: 'Bearer',
+        headerName: 'Authorization', // Authorization
+        maxAgeInSeconds: 60 * 60 * 24 // バックエンドと同じか長くしないと不整合な状態になる（フロントが未ログイン、バックエンドがログイン中）
+      },
+
+      //getSession Return Type
+      sessionDataType: { id: 'string', name: 'string', token: 'string' }
+    },
+    session: {
+      //24時間経ったらsession(/me)のAPIを呼び出す
+      enableRefreshPeriodically: 86400000,
+      enableRefreshOnWindowFocus: true,
+    },
+    baseURL: envSet.APP_ENV.URL,
+  },
   runtimeConfig: {
     dev: process.env.NODE_ENV !== 'production',
     ssr: false,
@@ -30,6 +59,6 @@ export default defineNuxtConfig({
     port: 3002,
   },
   plugins: [
-
+    
   ],
 });

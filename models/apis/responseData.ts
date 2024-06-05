@@ -1,69 +1,40 @@
 import * as ModeBuy from '../../vendor/apis/modeBuy';
+import Basic from './basic';
 //import { Member } from '../entitis/member';
 
-export default class ResponseData { 
+export default class ResponseData extends Basic { 
   
   //仮登録
-   public static temporaryRegistration(email: string): Promise<any> {
-    return new Promise(() => {
-      const response = ModeBuy.temporaryRegistration({
+  public static temporaryRegistration(email:string):Promise<any> {
+    return this.createPromise(ModeBuy.temporaryRegistration, {
         email: email
-      });
-      try {
-        Promise.resolve(response)
-      }catch(error) {
-        Promise.reject(error)
-      }
     })
   }
 
   //本登録
-  public static officialRegistration(name: string, password: string, token: string, address: string, city: string, country: string): Promise<any> {
-    return new Promise(() => {
-      const response = ModeBuy.officialRegistration({
-        name: name,
-        password: password,
-        token: token,
-        address: address,
-        city: city,
-        country: country
-      });
-      try {
-        Promise.resolve(response)
-      }catch(error) {
-        Promise.reject(error)
-      }
+  public static officialRegistration(name: string, password: string, token: string, address: string, city: string, country: string):Promise<any> {
+    return this.createPromise(ModeBuy.officialRegistration, {
+      name: name,
+      password: password,
+      token: token,
+      address: address,
+      city: city,
+      country: country
     })
   }
 
   //ログイン
-  public static login(email: string, password: string)
-  {
-    return new Promise(() => {
-      const response = ModeBuy.login({
-        email: email,
+  public static login(email: string, password: string):Promise<any> {
+    return this.createPromise(ModeBuy.officialRegistration, {
+      email: email,
         password: password
-      });
-      try {
-        Promise.resolve(response)
-      }catch(error) {
-        Promise.reject(error)
-      }
-    });
+    })
   }
 
   //ログアウト
-  public static logout(member_id: string)
-  {
-    return new Promise(() => {
-      const response = ModeBuy.logout({
-        member_id,
-      });
-      try {
-        Promise.resolve(response)
-      } catch(error) {
-        Promise.reject(error)
-      }
+  public static logout(member_id: string):Promise<any> {
+    return this.createPromise(ModeBuy.officialRegistration, {
+      member_id,
     })
   }
 }
