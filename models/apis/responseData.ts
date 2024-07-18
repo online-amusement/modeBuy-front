@@ -1,6 +1,6 @@
 import * as ModeBuy from '../../vendor/apis/modeBuy';
 import Basic from './basic';
-//import { Member } from '../entitis/member';
+import * as Member from '../entitis/member';
 
 export default class ResponseData extends Basic { 
   
@@ -26,7 +26,7 @@ export default class ResponseData extends Basic {
   //ログイン
   public static login(email: string, password: string):Promise<any> {
     return this.createPromise(ModeBuy.officialRegistration, {
-      email: email,
+        email: email,
         password: password
     })
   }

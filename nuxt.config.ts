@@ -28,11 +28,11 @@ export default defineNuxtConfig({
       },
       endpoints: {
         signIn: { path: "/login", method: "post"},
+        signOut: { path: "/logout", method: "get" },
         getSession: { path: "/me", method: "post"},
       },
       token: {
         // signInResponseTokenPointer: '/token', // レスポンスJSON内のtokenのキー
-        type: 'Bearer',
         headerName: 'Authorization', // Authorization
         maxAgeInSeconds: 60 * 60 * 24 // バックエンドと同じか長くしないと不整合な状態になる（フロントが未ログイン、バックエンドがログイン中）
       },
@@ -49,7 +49,6 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     dev: process.env.NODE_ENV !== 'production',
-    ssr: false,
     public: {
       publicConfig: process.env.PUBLIC_CONFIG,
       appUrl: envSet.APP_ENV.URL
@@ -57,8 +56,9 @@ export default defineNuxtConfig({
   },
   devServer: {
     port: 3002,
-  },
+  },  
   plugins: [
     
   ],
+  ssr: false
 });

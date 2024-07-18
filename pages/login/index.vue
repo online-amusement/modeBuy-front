@@ -7,7 +7,8 @@
             <form method="POST" action="" @submit.prevent>
                 <div class="email-area">
                     <label class="email" for="email">メールアドレス:</label>
-                    <input v-model="email" type="text" placeholder="メールアドレス" id="email"/>
+                    <input v-model="email" type="email" placeholder="メールアドレス" id="email" />
+                    <p class="error-text">{{ errors.email }}</p>
                 </div>
                 <div class="password-area">
                     <label class="password" for="password">パスワード:</label>
@@ -16,6 +17,7 @@
                         <span v-if="pass_check == false" class="material-icons" @click="passwordCheck()" :class="pass_check == false ? 'visibility' : 'visibility_off' ">visibility</span>
                         <span v-if="pass_check == true" class="material-icons" @click="passwordCheck()" :class="pass_check == true ? 'visibility' : 'visibility_off' " >visibility_off</span>
                     </div>
+                    <p class="error-text">{{ errors.password }}</p>
                 </div>
                 <div class="btn-area">
                     <button @click="login()" class="btn" type="submit">ログイン</button>
@@ -25,10 +27,8 @@
     </div>
 </template>
 <script setup lang="ts">
-import { pass } from 'three/examples/jsm/nodes/Nodes.js';
 import { ref } from 'vue';
 import * as yup from 'yup';
-
 import ResponseData from '~/models/apis/responseData';
 
 
@@ -38,80 +38,78 @@ definePageMeta({
     }
 })
 
-const schema = yup.object({
-  email: yup.string().required("メールアドレスを入力してください").email("メールアドレスの形式が正しくありません"),
-  password: yup.string().required("パスワードを入力してください").min(8, "パスワードは8文字以上で入力してください"),
-})
-
-//const email = ref("");
-const email = ref("");
-const password = ref("");
-
+const email = ref('');
+const password = ref('');
+const errors = ref({});
 const { signIn, token, status, data, signOut } = useAuth();
+const { setToken } = useAuthState();
 const router = useRouter();
 const accessToken = ref("");
-const error = ref('');
 const pass_check = ref(false);
 
+const validateScheme = yup.object({
+    email: yup.string().email("メールアドレスの形式が正しくありません").required("メールアドレスを入力してください"),
+    password: yup.string().required("パスワードを入力してください").min(8, "パスワードは8文字以上入力してください"),
+})
 
+//バリデーション関数定義
+const validate = (values: any) => {
+    try {
+        validateScheme.validateSync(values, {abortEarly: false})
+        return true
+    }catch(e: any){
+        const validationErrors : any = {}
+        //innerにエラー内容が入っている
+        e.inner.forEach((error:any) => {
+            if (error.path) {
+                validationErrors[error.path] = error.message;
+            }
+        });
+        errors.value = validationErrors
+        return false;
+    }
+}
+
+    
+//ログイン処理
 const login = async() => {
-    localStorage.removeItem("auth._token");
-    const response = await signIn({
+
+    const values = {
         email: email.value,
-        password: password.value
+        password: password.value,
+    }
+
+    //バリデーション実行
+    if(false == validate(values)){
+        //バリデーションエラーの場合は何も返さない
+        return 
+    }
+
+    localStorage.removeItem("auth._token");
+    setToken(null);
+    
+    console.log("token", token.value)
+    
+    const response = await signIn({
+        email: values.email,
+        password: values.password,
     }, {
         redirect: false
     });
-    console.log(token.value)
-    localStorage.setItem("auth._token", token.value)
-    if(status.value == 'authenticated') {
-        router.push('/home')
-    }
-}
-    //バリデーション
-    /*const validated = await schema.validate({
-        email: email.value,
-        password: password.value
-    }).catch((err) => {
-        alert((err as any).message)
-        return;
-    })
-
-    if(!validated){
-        return;
+    try {
+        console.log("tokenTest", token.value)
+        if(token.value) {
+            localStorage.setItem("auth._token", token.value)
+            
+            if(status.value == 'authenticated') {
+                router.push('/home')
+            }
+        }
+    }catch(e) {
+        return e
     }
     
-    try {
-        //forget token
-        localStorage.removeItem("auth._token");
-
-        const response = await signIn({
-            email: (validated as any).email,
-            password: (validated as any).value,
-        },{
-            redirect: false
-        })
-
-        //console.log("response", response, token.value, status.value, data.value)
-
-        const data_value = data.value as any
-
-        if(data_value.result && token.value){
-            localStorage.setItem("auth._token", token.value)
-            if(status.value == "authenticated") {
-                router.push('/home/')
-            }else {
-                router.push('/registration/profile/')
-            }
-        }else{
-            alert(data_value.message)
-        }
-    }catch(error){
-        //error = "ログインできませんでした。"
-        console.log(error)
-        alert("ログインできませんでした。")
-    }
-}*/
+}
 
 const passwordCheck = () => {
     pass_check.value =! pass_check.value
@@ -164,5 +162,8 @@ input {
 .password-check {
     display: flex;
     align-items: center;
+}
+.error-text {
+    color: #FF0000	;
 }
 </style>

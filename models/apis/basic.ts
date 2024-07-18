@@ -3,7 +3,7 @@ export default class BasicApi {
         let combinedParams = Object.assign(parameter);
 
         if(token) {
-            combinedParams["Authorization"] = localStorage.getItem('auth._token');
+            combinedParams["Authorization"] = localStorage.getItem('auth.token');
         }
 
         return new Promise(async (resolve, reject) => {
