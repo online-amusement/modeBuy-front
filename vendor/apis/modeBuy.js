@@ -4,9 +4,9 @@ const headers = computed(() => {
   const tokenString = localStorage.getItem(
     'auth._token'
   );
-
+  
   return new Headers({
-    Authorization: tokenString
+    Authorization: 'Bearer ' + tokenString
   })
 });
 
@@ -18,6 +18,10 @@ const temporaryRegistration = (data) => {
     headers: headers,
     body: {
       email: data.email,
+    },
+    onResponseError({ request, response, options }) {
+      // ネットワークのエラー対応
+      alert("network error")
     }
   })
 };
@@ -26,7 +30,6 @@ const temporaryRegistration = (data) => {
 const officialRegistration = (data) => {
   return useFetch(domain + "/member/official-registration", {
     method: "POST",
-    //headers: headers,
     body: {
       name: data.name,
       password: data.password,
@@ -50,10 +53,10 @@ const login = (data) => useFetch(domain + "/login", {
 
 //ログアウト
 const logout = (data) => useFetch(domain + "/logout", {
-  method: "POST",
+  method: "GET",
   headers: headers,
   body: {
-    member_id: data.member_id,
+    token: data.token,
   }
 });
 

@@ -21,6 +21,8 @@
     "@types/three": "^0.164.0",
     "@vee-validate/i18n": "^4.12.8",
     "@vee-validate/rules": "^4.12.8",
+    "firebase": "^10.12.2",
+    "firebaseui": "^6.1.0",
     "node-sass": "^9.0.0",
     "sass-loader": "^14.1.1",
     "three": "^0.164.1",

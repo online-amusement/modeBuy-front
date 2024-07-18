@@ -11,6 +11,12 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 //definePageMeta({ auth: false });
 
+definePageMeta({
+    auth: {
+        unauthenticatedOnly: true
+    }
+})
+
 const { getSession } = useAuth()
 const dataValue = await getSession()
 //import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";

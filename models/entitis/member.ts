@@ -1,4 +1,4 @@
-import { BaseResponse } from "./baseResponse";
+import * as BaseResponse from "./baseResponse";
 
 export interface MemberEntity {
     id: number,
